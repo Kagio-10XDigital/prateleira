@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Produtos{% endblock %}
+{% block conteudo %}
+<div class="barra">
+  <h1>Produtos</h1>
+  <form method="get" class="busca"><input name="q" value="{{ q }}" placeholder="Buscar por nome, código ou categoria" aria-label="Buscar produtos"><button class="btn sec">Buscar</button></form>
+  <a class="btn" href="{{ url_for('produto_novo') }}">Novo produto</a>
+  <a class="btn sec" href="{{ url_for('exportar') }}">Exportar CSV</a>
+</div>
+{% if itens %}
+<div class="rolagem">
+<table>
+  <thead><tr><th>Produto</th><th>Categoria</th><th class="num">Preço</th><th class="num">Estoque</th><th>Movimentar</th><th></th></tr></thead>
+  <tbody>
+  {% for p in itens %}
+    <tr>
+      <td>{{ p.nome }}<small>{{ p.sku }}</small></td>
+      <td>{{ p.categoria }}</td>
+      <td class="num">{{ p.preco_centavos | brl }}</td>
+      <td class="num"><span class="tag {{ 'zerado' if p.estoque_atual == 0 else ('baixo' if p.estoque_atual <= p.estoque_minimo else 'ok') }}">{{ p.estoque_atual }}</span></td>
+      <td>
+        <form method="post" action="{{ url_for('movimentar', pid=p.id) }}" class="mov">
+          <input name="quantidade" type="number" min="1" value="1" aria-label="Quantidade de {{ p.nome }}">
+          <input name="motivo" placeholder="Motivo (opcional)" aria-label="Motivo">
+          <button class="btn mini" name="tipo" value="entrada">Entrada</button>
+          <button class="btn mini sec" name="tipo" value="saida">Saída</button>
+        </form>
+      </td>
+      <td class="acoes">
+        <a href="{{ url_for('produto_editar', pid=p.id) }}">Editar</a>
+        <form method="post" action="{{ url_for('produto_excluir', pid=p.id) }}" onsubmit="return confirm('Remover este produto da lista?');"><button class="link perigo">Remover</button></form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="vazio">{% if q %}Nenhum produto encontrado para “{{ q }}”.{% else %}Nenhum produto cadastrado. <a href="{{ url_for('produto_novo') }}">Cadastre o primeiro.</a>{% endif %}</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Novo produto' if novo else 'Editar produto' }}{% endblock %}
+{% block conteudo %}
+<h1>{{ 'Novo produto' if novo else 'Editar produto' }}</h1>
+<form method="post" class="form largo">
+  <label>Código (SKU) <input name="sku" value="{{ p.sku or '' }}" required></label>
+  <label>Nome <input name="nome" value="{{ p.nome or '' }}" required></label>
+  <label>Categoria <input name="categoria" value="{{ p.categoria or '' }}" placeholder="Ex.: Bebidas"></label>
+  <label>Preço de venda (R$) <input name="preco" inputmode="decimal" value="{{ ('%.2f' % (p.preco_centavos / 100)).replace('.', ',') if p.get('preco_centavos') is not none else '' }}" required></label>
+  <label>Estoque mínimo (aviso de reposição) <input name="estoque_minimo" type="number" min="0" value="{{ p.estoque_minimo if p.get('estoque_minimo') is not none else 0 }}"></label>
+  <div class="linha"><button class="btn">Salvar produto</button><a class="btn sec" href="{{ url_for('produtos') }}">Cancelar</a></div>
+</form>
+{% endblock %}

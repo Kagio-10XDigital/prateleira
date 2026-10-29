@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Resumo{% endblock %}
+{% block conteudo %}
+<h1>Resumo do estoque</h1>
+<div class="numeros">
+  <div><strong>{{ resumo.itens }}</strong><span>produtos cadastrados</span></div>
+  <div><strong>{{ resumo.unidades }}</strong><span>unidades em estoque</span></div>
+  <div><strong>{{ resumo.valor | brl }}</strong><span>valor total (preço de venda)</span></div>
+  <div class="{{ 'alerta' if baixos else '' }}"><strong>{{ baixos | length }}</strong><span>com estoque baixo</span></div>
+</div>
+
+<div class="duas-colunas">
+  <section>
+    <h2>Repor em breve</h2>
+    {% if baixos %}
+    <table>
+      <thead><tr><th>Produto</th><th class="num">Estoque</th><th class="num">Mínimo</th></tr></thead>
+      <tbody>
+      {% for p in baixos %}
+        <tr><td>{{ p.nome }}<small>{{ p.sku }}</small></td>
+            <td class="num"><span class="tag {{ 'zerado' if p.estoque_atual == 0 else 'baixo' }}">{{ p.estoque_atual }}</span></td>
+            <td class="num">{{ p.estoque_minimo }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="vazio">Nenhum produto abaixo do mínimo. Tudo em dia.</p>
+    {% endif %}
+  </section>
+  <section>
+    <h2>Últimos movimentos</h2>
+    {% if recentes %}
+    <table>
+      <tbody>
+      {% for m in recentes %}
+        <tr><td>{{ m.nome }}<small>{{ m.criado_em | data_br }} · {{ m.usuario }}</small></td>
+            <td class="num mov-{{ m.tipo }}">{{ '+' if m.tipo == 'entrada' else '−' }}{{ m.quantidade }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="vazio">Ainda não há movimentos. <a href="{{ url_for('produtos') }}">Registre a primeira entrada.</a></p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

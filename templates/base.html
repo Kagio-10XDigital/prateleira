@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Prateleira{% endblock %} · Prateleira</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if session.usuario %}
+<header class="topo">
+  <a class="marca" href="{{ url_for('dashboard') }}"><span class="etiqueta-logo">P</span>Prateleira</a>
+  <nav>
+    <a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}aria-current="page"{% endif %}>Resumo</a>
+    <a href="{{ url_for('produtos') }}" {% if request.endpoint in ('produtos','produto_novo','produto_editar') %}aria-current="page"{% endif %}>Produtos</a>
+    <a href="{{ url_for('movimentos') }}" {% if request.endpoint == 'movimentos' %}aria-current="page"{% endif %}>Movimentos</a>
+  </nav>
+  <span class="sessao">{{ session.usuario }} · <a href="{{ url_for('logout') }}">Sair</a></span>
+</header>
+{% endif %}
+<main>
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}<div class="aviso {{ cat }}" role="status">{{ m }}</div>{% endfor %}
+  {% endwith %}
+  {% block conteudo %}{% endblock %}
+</main>
+</body>
+</html>

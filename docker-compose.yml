@@ -1,0 +1,14 @@
+services:
+  prateleira:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      SECRET_KEY: "${SECRET_KEY:-troque-esta-chave-em-producao}"
+      ADMIN_USER: "${ADMIN_USER:-admin}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-admin123}"
+    volumes:
+      - dados:/data
+    restart: unless-stopped
+volumes:
+  dados:
