@@ -27,7 +27,7 @@ Python 3.12 · Flask · SQLite · Jinja2 · Gunicorn · Docker · pytest
 Pré-requisito: Docker com Docker Compose.
 
 ```bash
-git clone <URL-DO-REPOSITORIO>
+git clone https://github.com/Kagio-10XDigital/prateleira.git
 cd prateleira
 docker compose up --build
 ```

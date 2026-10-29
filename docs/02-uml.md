@@ -60,7 +60,7 @@ sequenceDiagram
     C->>UI: informa quantidade e clica em "Saída"
     UI->>A: POST /produtos/{id}/movimentar
     A->>A: valida sessão e quantidade > 0
-    A->>DB: BEGIN IMMEDIATE; lê produto
+    A->>DB: BEGIN IMMEDIATE, lê produto
     DB-->>A: estoque_atual
     alt estoque_atual - quantidade < 0
         A->>DB: ROLLBACK
